@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="app_name">Oikos</string>
+	<string name="amount">£123.45</string>
+	<string name="perday">£6.78 / day</string>
+	<string name="today">Today</string>
+	<string name="yesterday">Yesterday</string>
+	<string name="currency">K</string>
+</resources>
