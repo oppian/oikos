@@ -1,63 +1,74 @@
 package com.oppian.oikos.model;
 
-import java.math.BigDecimal;
+import java.io.Serializable;
 import java.util.Date;
 
 import com.j256.ormlite.field.DatabaseField;
 import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
-public class Entry {
-	
-	@DatabaseField(generatedId = true)
-	private Long id;
-	
-	@DatabaseField(canBeNull = false)
-	private BigDecimal amount;
-	
-	@DatabaseField
-	private String description;
-	
-	@DatabaseField(canBeNull = false)
-	private Date entryDate;
-	
-	public Entry() {
-		
-	}
-	
-	public Entry(String amount, String description) {
-		this.amount = new BigDecimal(amount);
-		this.description = description;
-		this.entryDate = new Date();
-	}
+public class Entry implements Serializable {
+    
+    private static final long serialVersionUID = -731479195234492944L;
 
-	@Override
-	public String toString() {
-		return "Entry [amount=" + amount + ", description=" + description
-				+ ", entryDate=" + entryDate + ", id=" + id + "]";
-	}
+    public static final String DATE_FIELD_NAME = "entryDate";
 
-	public BigDecimal getAmount() {
-		return amount;
-	}
+    @DatabaseField(generatedId = true)
+    private Integer id;
 
-	public void setAmount(BigDecimal amount) {
-		this.amount = amount;
-	}
+    @DatabaseField(canBeNull = false)
+    private int     amount;
 
-	public String getDescription() {
-		return description;
-	}
+    @DatabaseField
+    private String  description;
 
-	public void setDescription(String description) {
-		this.description = description;
-	}
+    @DatabaseField(canBeNull = false, columnName = DATE_FIELD_NAME, index = true)
+    private Date    entryDate;
 
-	public Date getEntryDate() {
-		return entryDate;
-	}
+    public Entry() {
 
-	public void setEntryDate(Date entryDate) {
-		this.entryDate = entryDate;
-	}
+    }
+
+    public Entry(int amount, String description) {
+        this.amount = amount;
+        this.description = description;
+        this.entryDate = new Date();
+    }
+
+    @Override
+    public String toString() {
+        return amount + " " + description + " on " + entryDate.toLocaleString();
+    }
+    
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public int getAmount() {
+        return amount;
+    }
+
+    public void setAmount(int amount) {
+        this.amount = amount;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Date getEntryDate() {
+        return entryDate;
+    }
+
+    public void setEntryDate(Date entryDate) {
+        this.entryDate = entryDate;
+    }
 }
