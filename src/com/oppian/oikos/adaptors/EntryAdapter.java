@@ -32,7 +32,7 @@ public class EntryAdapter extends ArrayAdapter<Entry> {
         if (null == row) {
             // set default row
             LayoutInflater inflator = activity.getLayoutInflater();
-            row = inflator.inflate(R.layout.list_item2, parent, false);
+            row = inflator.inflate(R.layout.list_item, parent, false);
         }
         // find ui components and set them for this entry
         Entry entry = getItem(position);

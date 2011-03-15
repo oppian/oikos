@@ -10,10 +10,9 @@ import android.util.Log;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.dao.BaseDaoImpl;
 import com.j256.ormlite.dao.Dao;
-import com.j256.ormlite.stmt.PreparedQuery;
-import com.j256.ormlite.stmt.QueryBuilder;
 import com.j256.ormlite.support.ConnectionSource;
 import com.j256.ormlite.table.TableUtils;
+import com.oppian.oikos.model.Account;
 import com.oppian.oikos.model.Entry;
 
 /**
@@ -25,10 +24,11 @@ public class Db extends OrmLiteSqliteOpenHelper {
 
     // name of the database file for your application
     private static final String DATABASE_NAME    = "oikos.db";
-    private static final int    DATABASE_VERSION = 7;
+    private static final int    DATABASE_VERSION = 8;
 
-    // the dao
-    private Dao<Entry, Integer>    mEntryDao        = null;
+    // the daos
+    private Dao<Entry, Integer>    entryDao        = null;
+    private Dao<Account, Integer>    accountDao        = null;
 
     public Db(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -39,6 +39,7 @@ public class Db extends OrmLiteSqliteOpenHelper {
         Log.i(Db.class.getName(), "onCreate");
         try {
             TableUtils.createTable(connectionSource, Entry.class);
+            TableUtils.createTable(connectionSource, Account.class);
         } catch (SQLException e) {
             e.printStackTrace();
             Log.e(Db.class.getName(), "Can't create database", e);
@@ -51,20 +52,21 @@ public class Db extends OrmLiteSqliteOpenHelper {
         Log.i(Db.class.getName(), "onUpgrade");
         try {
             TableUtils.dropTable(connectionSource, Entry.class, true);
+            TableUtils.dropTable(connectionSource, Account.class, true);
             // after we drop the old databases, we create the new ones
             onCreate(db, connectionSource);
         } catch (SQLException e) {
             e.printStackTrace();
-            Log.e(Db.class.getName(), "Can't drop databases", e);
+            Log.e(Db.class.getName(), "Can't drop database", e);
             throw new RuntimeException(e);
         }
     }
 
     public Dao<Entry, Integer> getEntryDao() throws SQLException {
-        if (mEntryDao == null) {
-            mEntryDao = BaseDaoImpl.createDao(getConnectionSource(), Entry.class);
+        if (entryDao == null) {
+            entryDao = BaseDaoImpl.createDao(getConnectionSource(), Entry.class);
         }
-        return mEntryDao;
+        return entryDao;
     }
     
     public List<Entry> entryList() throws SQLException {
@@ -77,7 +79,27 @@ public class Db extends OrmLiteSqliteOpenHelper {
     @Override
     public void close() {
         super.close();
-        mEntryDao = null;
+        entryDao = null;
+    }
+
+    public Dao<Account, Integer> getAccountDao() throws SQLException {
+        if (accountDao == null) {
+            accountDao = BaseDaoImpl.createDao(getConnectionSource(), Account.class);
+        }
+        return accountDao;
+    }
+    
+    public Account getAccount() throws SQLException {
+        Dao<Account, Integer> dao = getAccountDao();
+        List<Account> list = dao.queryForAll();
+        if (list.size() == 0) {
+            // create
+            Account account = new Account("Default", 0);
+            dao.create(account);
+            return account;
+        }
+        return list.get(0);
+            
     }
 
 }

@@ -24,12 +24,16 @@ public class Entry implements Serializable {
 
     @DatabaseField(canBeNull = false, columnName = DATE_FIELD_NAME, index = true)
     private Date    entryDate;
+    
+    @DatabaseField(canBeNull = false, foreign = true)
+    private Account account;
 
     public Entry() {
 
     }
 
-    public Entry(int amount, String description) {
+    public Entry(Account account, int amount, String description) {
+        this.account = account;
         this.amount = amount;
         this.description = description;
         this.entryDate = new Date();
@@ -37,7 +41,8 @@ public class Entry implements Serializable {
 
     @Override
     public String toString() {
-        return amount + " " + description + " on " + entryDate.toLocaleString();
+        return "Entry [account=" + account + ", amount=" + amount + ", description=" + description + ", entryDate="
+                + entryDate + ", id=" + id + "]";
     }
     
     public Integer getId() {
@@ -70,5 +75,13 @@ public class Entry implements Serializable {
 
     public void setEntryDate(Date entryDate) {
         this.entryDate = entryDate;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }

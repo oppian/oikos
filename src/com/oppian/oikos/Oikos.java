@@ -21,8 +21,8 @@ import com.j256.ormlite.android.apptools.OpenHelperManager;
 import com.j256.ormlite.android.apptools.OrmLiteBaseListActivity;
 import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager.SqliteOpenHelperFactory;
-import com.j256.ormlite.dao.Dao;
 import com.oppian.oikos.adaptors.EntryAdapter;
+import com.oppian.oikos.model.Account;
 import com.oppian.oikos.model.Entry;
 
 public class Oikos extends OrmLiteBaseListActivity<Db> {
@@ -35,6 +35,32 @@ public class Oikos extends OrmLiteBaseListActivity<Db> {
                 return new Db(context);
             }
         });
+    }
+
+    private Account      account;
+
+    private List<Entry>  entryList;
+
+    private void fillData() {
+        Log.i(LOG_TAG, "fillData");
+        try {
+            account = getHelper().getAccount();
+            entryList = getHelper().entryList();
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG, "problem getting list", e);
+            throw new RuntimeException(e);
+        }
+
+        // get number format
+        NumberFormat nf = NumberFormat.getCurrencyInstance();
+        
+        // update total
+        TextView totalTextView = (TextView)findViewById(R.id.total);
+        totalTextView.setText(nf.format(account.getTotal()/100.0));
+
+        // set the list adaptor
+        setListAdapter(new EntryAdapter(this, R.layout.list_item, entryList, nf));
     }
 
     /** Called when the activity is first created. */
@@ -70,6 +96,18 @@ public class Oikos extends OrmLiteBaseListActivity<Db> {
         });
     }
 
+    private Number parseAmount(NumberFormat[] numberFormats, String token) {
+        // try parse using currency
+        for (NumberFormat numberFormat : numberFormats) {
+            try {
+                return numberFormat.parse(token);
+            } catch (ParseException e) {
+
+            }
+        }
+        return null;
+    }
+
     private boolean parseEntry(String text) {
         // get number format
         NumberFormat cf = NumberFormat.getCurrencyInstance();
@@ -97,12 +135,16 @@ public class Oikos extends OrmLiteBaseListActivity<Db> {
         }
 
         if (amount != null) {
-            int a = Math.round(amount.floatValue() * 100);
-            Entry entry = new Entry(a, description.toString());
+            int a = Math.round(amount.floatValue() * -100);
+            Entry entry = new Entry(account, a, description.toString());
             Log.i(LOG_TAG, entry.toString());
             try {
-                Dao<Entry, Integer> dao = getHelper().getEntryDao();
-                dao.create(entry);
+                // create transaction entry
+                getHelper().getEntryDao().create(entry);
+                // update account
+                account.setTotal(account.getTotal() + a);
+                getHelper().getAccountDao().update(account);
+                // redraw
                 fillData();
                 return true;
             } catch (SQLException e) {
@@ -113,36 +155,5 @@ public class Oikos extends OrmLiteBaseListActivity<Db> {
         }
         return false;
     }
-
-    private Number parseAmount(NumberFormat[] numberFormats, String token) {
-        // try parse using currency
-        for (NumberFormat numberFormat : numberFormats) {
-            try {
-                return numberFormat.parse(token);
-            } catch (ParseException e) {
-
-            }
-        }
-        return null;
-    }
-
-    private void fillData() {
-        Log.i(LOG_TAG, "fillData");
-        try {
-            mEntryList = getHelper().entryList();
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Log.e(LOG_TAG, "problem getting list", e);
-            throw new RuntimeException(e);
-        }
-        
-        // get number format
-        NumberFormat nf = NumberFormat.getCurrencyInstance();
-
-        // set the list adaptor
-        setListAdapter(new EntryAdapter(this, R.layout.list_item2, mEntryList, nf));
-    }
-
-    private List<Entry> mEntryList;
 
 }
