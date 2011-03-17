@@ -3,6 +3,7 @@ package com.oppian.oikos;
 import java.sql.SQLException;
 import java.text.NumberFormat;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 
@@ -40,12 +41,13 @@ public class Oikos extends OrmLiteBaseListActivity<Db> {
     private Account      account;
 
     private List<Entry>  entryList;
-
+    
     private void fillData() {
         Log.i(LOG_TAG, "fillData");
         try {
             account = getHelper().getAccount();
             entryList = getHelper().entryList();
+            updateAvg();
         } catch (SQLException e) {
             e.printStackTrace();
             Log.e(LOG_TAG, "problem getting list", e);
@@ -154,6 +156,28 @@ public class Oikos extends OrmLiteBaseListActivity<Db> {
             }
         }
         return false;
+    }
+
+    private void updateAvg() {
+        int total = 0;
+        // use the first entry date, or today if none
+        Date firstDate = null;
+        // iterate over entries
+        for (Entry entry : entryList) {
+            // only count negative entries
+            if (entry.getAmount() < 0) {
+                total = total + entry.getAmount();
+                firstDate = entry.getEntryDate();
+            }
+        }
+        if (firstDate == null) {
+            firstDate = new Date();
+        }
+        Date now = new Date();
+        long deltaDays = ((now.getTime() - firstDate.getTime()) / (24*60*60*1000) + 1); // inclusive
+        TextView averageTextView = (TextView) findViewById(R.id.perday);
+        NumberFormat nf = NumberFormat.getCurrencyInstance();
+        averageTextView.setText(nf.format((total / deltaDays)/100.0) + "/day");
     }
 
 }
