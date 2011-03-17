@@ -41,7 +41,7 @@ public class Oikos extends OrmLiteBaseListActivity<Db> {
     private Account      account;
 
     private List<Entry>  entryList;
-    
+
     private void fillData() {
         Log.i(LOG_TAG, "fillData");
         try {
@@ -56,10 +56,10 @@ public class Oikos extends OrmLiteBaseListActivity<Db> {
 
         // get number format
         NumberFormat nf = NumberFormat.getCurrencyInstance();
-        
+
         // update total
-        TextView totalTextView = (TextView)findViewById(R.id.total);
-        totalTextView.setText(nf.format(account.getTotal()/100.0));
+        TextView totalTextView = (TextView) findViewById(R.id.total);
+        totalTextView.setText(nf.format(account.getTotal() / 100.0));
 
         // set the list adaptor
         setListAdapter(new EntryAdapter(this, R.layout.list_item, entryList, nf));
@@ -174,10 +174,10 @@ public class Oikos extends OrmLiteBaseListActivity<Db> {
             firstDate = new Date();
         }
         Date now = new Date();
-        long deltaDays = ((now.getTime() - firstDate.getTime()) / (24*60*60*1000) + 1); // inclusive
+        long deltaDays = ((now.getTime() - firstDate.getTime()) / (24 * 60 * 60 * 1000) + 1); // inclusive
         TextView averageTextView = (TextView) findViewById(R.id.perday);
         NumberFormat nf = NumberFormat.getCurrencyInstance();
-        averageTextView.setText(nf.format((total / deltaDays)/100.0) + "/day");
+        averageTextView.setText(nf.format((total / deltaDays) / 100.0) + "/day");
     }
 
 }

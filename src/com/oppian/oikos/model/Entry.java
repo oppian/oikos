@@ -8,25 +8,25 @@ import com.j256.ormlite.table.DatabaseTable;
 
 @DatabaseTable
 public class Entry implements Serializable {
-    
-    private static final long serialVersionUID = -731479195234492944L;
 
-    public static final String DATE_FIELD_NAME = "entryDate";
+    private static final long  serialVersionUID = -731479195234492944L;
+
+    public static final String DATE_FIELD_NAME  = "entryDate";
 
     @DatabaseField(generatedId = true)
-    private Integer id;
+    private Integer            id;
 
     @DatabaseField(canBeNull = false)
-    private int     amount;
+    private int                amount;
 
     @DatabaseField
-    private String  description;
+    private String             description;
 
     @DatabaseField(canBeNull = false, columnName = DATE_FIELD_NAME, index = true)
-    private Date    entryDate;
-    
+    private Date               entryDate;
+
     @DatabaseField(canBeNull = false, foreign = true)
-    private Account account;
+    private Account            account;
 
     public Entry() {
 
@@ -44,7 +44,7 @@ public class Entry implements Serializable {
         return "Entry [account=" + account + ", amount=" + amount + ", description=" + description + ", entryDate="
                 + entryDate + ", id=" + id + "]";
     }
-    
+
     public Integer getId() {
         return id;
     }

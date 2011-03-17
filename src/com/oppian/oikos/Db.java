@@ -23,12 +23,12 @@ import com.oppian.oikos.model.Entry;
 public class Db extends OrmLiteSqliteOpenHelper {
 
     // name of the database file for your application
-    private static final String DATABASE_NAME    = "oikos.db";
-    private static final int    DATABASE_VERSION = 8;
+    private static final String   DATABASE_NAME    = "oikos.db";
+    private static final int      DATABASE_VERSION = 8;
 
     // the daos
-    private Dao<Entry, Integer>    entryDao        = null;
-    private Dao<Account, Integer>    accountDao        = null;
+    private Dao<Entry, Integer>   entryDao         = null;
+    private Dao<Account, Integer> accountDao       = null;
 
     public Db(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -68,12 +68,10 @@ public class Db extends OrmLiteSqliteOpenHelper {
         }
         return entryDao;
     }
-    
+
     public List<Entry> entryList() throws SQLException {
         Dao<Entry, Integer> dao = getEntryDao();
-        return dao.query(dao.queryBuilder()
-                .orderBy("id", false)
-                .prepare());
+        return dao.query(dao.queryBuilder().orderBy("id", false).prepare());
     }
 
     @Override
@@ -88,7 +86,7 @@ public class Db extends OrmLiteSqliteOpenHelper {
         }
         return accountDao;
     }
-    
+
     public Account getAccount() throws SQLException {
         Dao<Account, Integer> dao = getAccountDao();
         List<Account> list = dao.queryForAll();
@@ -99,7 +97,7 @@ public class Db extends OrmLiteSqliteOpenHelper {
             return account;
         }
         return list.get(0);
-            
+
     }
 
 }
