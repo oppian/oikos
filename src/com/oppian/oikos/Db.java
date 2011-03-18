@@ -87,17 +87,4 @@ public class Db extends OrmLiteSqliteOpenHelper {
         return accountDao;
     }
 
-    public Account getAccount() throws SQLException {
-        Dao<Account, Integer> dao = getAccountDao();
-        List<Account> list = dao.queryForAll();
-        if (list.size() == 0) {
-            // create
-            Account account = new Account("Default", 0);
-            dao.create(account);
-            return account;
-        }
-        return list.get(0);
-
-    }
-
 }
