@@ -52,10 +52,14 @@ public class OikosManager {
         // save the entry into the db
         entryDao.create(entry);
         // update the account
-        account.setTotal(account.getTotal() + entry.getAmount());
-        accountDao.update(account);
+        synchronized (account) {
+            account.setTotal(account.getTotal() + entry.getAmount());
+            accountDao.update(account);
+        }
         // add the item to the list
-        entryList.add(0, entry);
+        synchronized (entryList) {
+            entryList.add(0, entry);
+        }
         // recalc the average
         average = calculateAverage();
     }

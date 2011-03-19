@@ -2,8 +2,6 @@ package com.oppian.oikos;
 
 import java.sql.SQLException;
 import java.text.NumberFormat;
-import java.text.ParseException;
-import java.util.Locale;
 
 import android.content.Context;
 import android.os.AsyncTask;
@@ -74,57 +72,16 @@ public class Oikos extends OrmLiteBaseListActivity<Db> {
         refreshViews();
     }
 
-    private Number parseAmount(NumberFormat[] numberFormats, String token) {
-        // try parse using currency
-        for (NumberFormat numberFormat : numberFormats) {
-            try {
-                return numberFormat.parse(token);
-            } catch (ParseException e) {
-                // ignore exception
-            }
-        }
-        return null;
-    }
+
 
     private boolean parseEntry(String text) {
-        // get number format
-        NumberFormat cf = NumberFormat.getCurrencyInstance();
-        NumberFormat nf = NumberFormat.getNumberInstance();
-        NumberFormat nfDefault = NumberFormat.getNumberInstance(Locale.US);
-        NumberFormat[] numberFormats = new NumberFormat[] { cf, nf, nfDefault };
-        StringBuilder description = new StringBuilder();
-        Number amount = null;
-        // tokenize string on whitespace
-        String[] tokens = text.split("\\s");
-        String token = null;
-        for (int x = 0; x < tokens.length; x++) {
-            token = tokens[x];
-            // look for currency
-            if (amount == null) {
-                amount = parseAmount(numberFormats, token);
-                if (amount != null) {
-                    continue;
-                }
-            }
-            if (description.length() > 0) {
-                description.append(" ");
-            }
-            description.append(token);
+        try {
+            return OikosParser.parseEntry(text, manager);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            Log.e(LOG_TAG, getString(R.string.error_sql), e);
+            throw new RuntimeException(getString(R.string.error_sql), e);
         }
-
-        if (amount != null) {
-            int a = Math.round(amount.floatValue() * -100);
-            try {
-                manager.addEntry(a, description.toString());
-            } catch (SQLException e) {
-                Log.e(LOG_TAG, "database error", e);
-                e.printStackTrace();
-                throw new RuntimeException("database error", e);
-            }
-            // clear text field
-            return true;
-        }
-        return false;
     }
 
     private void refreshViews() {
