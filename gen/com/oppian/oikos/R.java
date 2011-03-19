@@ -14,24 +14,32 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int addEntry=0x7f050007;
-        public static final int amount=0x7f050000;
-        public static final int description=0x7f050002;
-        public static final int entryDate=0x7f050004;
-        public static final int linearLayout1=0x7f050001;
-        public static final int perday=0x7f050006;
-        public static final int tags=0x7f050003;
-        public static final int total=0x7f050005;
+        public static final int addCash=0x7f060008;
+        public static final int addEntry=0x7f060007;
+        public static final int amount=0x7f060000;
+        public static final int description=0x7f060002;
+        public static final int entryDate=0x7f060004;
+        public static final int linearLayout1=0x7f060001;
+        public static final int perday=0x7f060006;
+        public static final int tags=0x7f060003;
+        public static final int total=0x7f060005;
     }
     public static final class layout {
         public static final int list_item=0x7f030000;
         public static final int main=0x7f030001;
     }
+    public static final class menu {
+        public static final int main_menu=0x7f050000;
+    }
     public static final class string {
+        public static final int add_cash=0x7f040007;
+        public static final int add_cash_entry_description=0x7f04000a;
         public static final int amount=0x7f040001;
         public static final int app_name=0x7f040000;
+        public static final int cancel=0x7f040009;
         public static final int currency=0x7f040005;
         public static final int error_sql=0x7f040006;
+        public static final int ok=0x7f040008;
         public static final int perday=0x7f040002;
         public static final int today=0x7f040003;
         public static final int yesterday=0x7f040004;

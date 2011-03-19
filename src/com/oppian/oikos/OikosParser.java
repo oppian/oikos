@@ -9,11 +9,17 @@ public class OikosParser {
     
     private static NumberFormat DEFAULT_NUMBERFORMAT = NumberFormat.getNumberInstance(Locale.US);
     
+    public static NumberFormat[] numberFormats() {
+        return new NumberFormat[] {
+                NumberFormat.getCurrencyInstance(),
+                NumberFormat.getNumberInstance(),
+                DEFAULT_NUMBERFORMAT
+        };
+    }
+    
     public static final Boolean parseEntry(String entryText, OikosManager manager) throws SQLException {
         // get number format
-        NumberFormat cf = NumberFormat.getCurrencyInstance();
-        NumberFormat nf = NumberFormat.getNumberInstance();
-        NumberFormat[] numberFormats = new NumberFormat[] { cf, nf, DEFAULT_NUMBERFORMAT };
+        NumberFormat[] numberFormats = numberFormats();
         StringBuilder description = new StringBuilder();
         Number amount = null;
         // tokenize string on whitespace
@@ -35,15 +41,19 @@ public class OikosParser {
         }
 
         if (amount != null) {
-            int a = Math.round(amount.floatValue() * 100) * -1;
+            int a = numberToCurrencyInt(amount);
             manager.addEntry(a, description.toString());
             // clear text field
             return true;
         }
         return false;
     }
+
+    public static int numberToCurrencyInt(Number amount) {
+        return Math.round(amount.floatValue() * 100) * -1;
+    }
     
-    private static Number parseAmount(NumberFormat[] numberFormats, String token) {
+    public static Number parseAmount(NumberFormat[] numberFormats, String token) {
         // try parse using currency
         for (NumberFormat numberFormat : numberFormats) {
             try {

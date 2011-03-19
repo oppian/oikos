@@ -46,7 +46,7 @@ public class OikosManager {
      * @param description The description for the entry
      * @throws SQLException If there was a SQL error
      */
-    public void addEntry(int amount, String description) throws SQLException {
+    public Entry addEntry(int amount, String description) throws SQLException {
         // create entry
         Entry entry = new Entry(account, amount, description);
         // save the entry into the db
@@ -62,6 +62,8 @@ public class OikosManager {
         }
         // recalc the average
         average = calculateAverage();
+        
+        return entry;
     }
 
     public Account getAccount() {

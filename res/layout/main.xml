@@ -11,6 +11,6 @@
 			android:gravity="right" android:text="@string/perday"
 			android:layout_width="fill_parent" android:id="@+id/perday"></TextView>
 	</LinearLayout>
-	<EditText android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/addEntry" android:text=""></EditText>
+	<EditText android:layout_width="fill_parent" android:layout_height="wrap_content" android:id="@+id/addEntry" android:text="" android:inputType="text|textAutoCorrect|textImeMultiLine"></EditText>
 	<ListView android:layout_height="wrap_content" android:layout_width="fill_parent" android:id="@android:id/list"></ListView>
 </LinearLayout>
