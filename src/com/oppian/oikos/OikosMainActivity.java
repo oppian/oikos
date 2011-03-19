@@ -6,7 +6,6 @@ import java.text.NumberFormat;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
@@ -18,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -28,6 +28,7 @@ import com.j256.ormlite.android.apptools.OpenHelperManager.SqliteOpenHelperFacto
 import com.oppian.oikos.adaptors.EntryAdapter;
 import com.oppian.oikos.tasks.AddCashTask;
 import com.oppian.oikos.tasks.ITaskView;
+import com.oppian.oikos.tasks.ParseEntryTask;
 
 public class OikosMainActivity extends OrmLiteBaseListActivity<Db> implements ITaskView {
 
@@ -60,18 +61,6 @@ public class OikosMainActivity extends OrmLiteBaseListActivity<Db> implements IT
         refreshViews();
     }
 
-
-
-    private boolean parseEntry(String text) {
-        try {
-            return OikosParser.parseEntry(text, manager);
-        } catch (SQLException e) {
-            e.printStackTrace();
-            Log.e(LOG_TAG, getString(R.string.error_sql), e);
-            throw new RuntimeException(getString(R.string.error_sql), e);
-        }
-    }
-
     private void refreshViews() {
         if (manager == null) { return; }
         // get number format
@@ -97,14 +86,15 @@ public class OikosMainActivity extends OrmLiteBaseListActivity<Db> implements IT
             }
         });
 
-        // setup add textview
+        // setup addEntry textview
         addEntryTextView = (TextView) findViewById(R.id.addEntry);
         addEntryTextView.setOnEditorActionListener(new OnEditorActionListener() {
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
                 // disable tv
                 addEntryTextView.setEnabled(false);
                 // parse in bg
-                new ParseTask().execute(addEntryTextView.getText().toString());
+                new ParseEntryTask(OikosMainActivity.this, R.string.entry_added, R.string.error_parse)
+                    .execute(addEntryTextView.getText().toString());
                 return true; // eat the key
             }
         });
@@ -123,15 +113,11 @@ public class OikosMainActivity extends OrmLiteBaseListActivity<Db> implements IT
         }
     }
 
-
-
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.main_menu, menu);
         return true;
     }
-
-
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -144,66 +130,59 @@ public class OikosMainActivity extends OrmLiteBaseListActivity<Db> implements IT
         return super.onOptionsItemSelected(item);
     }
 
-
-
     private void addCash() {
         // show add cash dialog
         Log.i(LOG_TAG, "addCash");
-        // view call back for task
-        final ITaskView view = this;
 
         // build alert dialog
         AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        alert.setTitle(R.string.add_cash)
-            .setMessage(R.string.amount);
-        
+        alert.setTitle(R.string.add_cash).setMessage(R.string.amount);
+
         // edit text to get input
         final EditText input = new EditText(this);
         input.setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_FLAG_DECIMAL);
         alert.setView(input);
-        
+
         // ok button
         alert.setPositiveButton(R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // create task
-                AddCashTask task = new AddCashTask(view, manager);
+                AddCashTask task = new AddCashTask(OikosMainActivity.this, R.string.cash_added, R.string.error_cash_added);
                 // execute
-                task.execute(input.getText().toString(), 
-                        getString(R.string.add_cash_entry_description));
+                task.execute(input.getText().toString(), getString(R.string.add_cash_entry_description));
             }
         });
-        
+
         // cancel
         alert.setNegativeButton(R.string.cancel, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
                 // cancelled
             }
         });
-        
+
         alert.show();
     }
 
-    private class ParseTask extends AsyncTask<String, Void, Boolean> {
-
-        @Override
-        protected Boolean doInBackground(String... entry) {
-            return parseEntry(entry[0]);
-        }
-
-        /**
-         * The system calls this to perform work in the UI thread and delivers
-         * the result from doInBackground()
-         */
-        protected void onPostExecute(Boolean clear) {
-            if (clear) {
+    public void success(int resId) {
+        // display success message
+        Toast.makeText(this, resId, Toast.LENGTH_SHORT).show();
+        // additional processing
+        switch (resId) {
+            case R.string.entry_added:
+                // clear textview
                 addEntryTextView.setText("");
-                refreshViews();
-            }
-            addEntryTextView.setEnabled(true);
+                addEntryTextView.setEnabled(true);
+                break;
         }
+        refreshViews();
     }
 
-    public void refresh() {
-        refreshViews();
+    public void error(int resId) {
+        // display error message
+        Toast.makeText(this, resId, Toast.LENGTH_LONG).show();
+    }
+
+    public synchronized OikosManager getManager() {
+        return manager;
     }
 }

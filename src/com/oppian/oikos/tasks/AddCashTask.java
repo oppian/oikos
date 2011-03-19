@@ -3,6 +3,7 @@ package com.oppian.oikos.tasks;
 import java.sql.SQLException;
 
 import android.os.AsyncTask;
+import android.util.Log;
 
 import com.oppian.oikos.OikosManager;
 import com.oppian.oikos.OikosParser;
@@ -10,15 +11,25 @@ import com.oppian.oikos.model.Entry;
 
 public class AddCashTask extends AsyncTask<String, Void, Entry> {
 
-    private OikosManager manager;
+    private static final String ERROR_MSG = "Database Error";
+
+    private final String LOG_TAG = getClass().getSimpleName();
+    
+    public AddCashTask(ITaskView view, int successResId, int errorResId) {
+        super();
+        this.view = view;
+        this.manager = view.getManager();
+        this.successResId = successResId;
+        this.errorResId = errorResId;
+    }
 
     private ITaskView view;
     
-    public AddCashTask(ITaskView view, OikosManager manager) {
-        super();
-        this.view = view;
-        this.manager = manager;
-    }
+    private int successResId;
+    
+    private int errorResId;
+    
+    private OikosManager manager;
 
     @Override
     protected Entry doInBackground(String... params) {
@@ -28,20 +39,21 @@ public class AddCashTask extends AsyncTask<String, Void, Entry> {
             try {
                 return manager.addEntry(OikosParser.numberToCurrencyInt(amount) * -1, description);
             } catch (SQLException e) {
-                // TODO output error
                 e.printStackTrace();
-                return null;
+                Log.e(LOG_TAG, ERROR_MSG);
+                throw new RuntimeException(ERROR_MSG, e);
             }
         }
         return null;
     }
 
     @Override
-    protected void onPostExecute(Entry result) {
-        if (result != null) {
-            view.refresh();
+    protected void onPostExecute(Entry entry) {
+        if (entry != null) {
+            view.success(successResId);
+        } else {
+            view.error(errorResId);
         }
-        // TODO output no result
     }
     
     

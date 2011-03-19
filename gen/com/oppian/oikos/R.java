@@ -32,16 +32,18 @@ public final class R {
         public static final int main_menu=0x7f050000;
     }
     public static final class string {
-        public static final int add_cash=0x7f040007;
-        public static final int add_cash_entry_description=0x7f04000a;
+        public static final int add_cash=0x7f040005;
+        public static final int add_cash_entry_description=0x7f040008;
         public static final int amount=0x7f040001;
         public static final int app_name=0x7f040000;
-        public static final int cancel=0x7f040009;
-        public static final int currency=0x7f040005;
-        public static final int error_sql=0x7f040006;
-        public static final int ok=0x7f040008;
-        public static final int perday=0x7f040002;
-        public static final int today=0x7f040003;
-        public static final int yesterday=0x7f040004;
+        public static final int cancel=0x7f040007;
+        public static final int cash_added=0x7f04000b;
+        public static final int entry_added=0x7f04000a;
+        public static final int error_cash_added=0x7f04000c;
+        public static final int error_parse=0x7f040009;
+        public static final int error_sql=0x7f040004;
+        public static final int ok=0x7f040006;
+        public static final int today=0x7f040002;
+        public static final int yesterday=0x7f040003;
     }
 }

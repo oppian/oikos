@@ -5,6 +5,8 @@ import java.text.NumberFormat;
 import java.text.ParseException;
 import java.util.Locale;
 
+import com.oppian.oikos.model.Entry;
+
 public class OikosParser {
     
     private static NumberFormat DEFAULT_NUMBERFORMAT = NumberFormat.getNumberInstance(Locale.US);
@@ -17,7 +19,7 @@ public class OikosParser {
         };
     }
     
-    public static final Boolean parseEntry(String entryText, OikosManager manager) throws SQLException {
+    public static final Entry parseEntry(String entryText, OikosManager manager) throws SQLException {
         // get number format
         NumberFormat[] numberFormats = numberFormats();
         StringBuilder description = new StringBuilder();
@@ -42,11 +44,9 @@ public class OikosParser {
 
         if (amount != null) {
             int a = numberToCurrencyInt(amount);
-            manager.addEntry(a, description.toString());
-            // clear text field
-            return true;
+            return manager.addEntry(a, description.toString());
         }
-        return false;
+        return null;
     }
 
     public static int numberToCurrencyInt(Number amount) {
