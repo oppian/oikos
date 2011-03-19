@@ -1,6 +1,7 @@
 package com.oppian.oikos.model;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Date;
 
 import com.j256.ormlite.field.DatabaseField;
@@ -55,6 +56,10 @@ public class Entry implements Serializable {
 
     public int getAmount() {
         return amount;
+    }
+    
+    public BigDecimal getAmountBigDecimal() {
+        return BigDecimal.valueOf(amount, 2);
     }
 
     public void setAmount(int amount) {

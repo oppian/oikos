@@ -36,13 +36,15 @@ public class EntryAdapter extends ArrayAdapter<Entry> {
         }
         // find ui components and set them for this entry
         Entry entry = getItem(position);
+        
         // amount
-        TextView amount = (TextView) row.findViewById(R.id.amount);
-
-        amount.setText(numberFormat.format(entry.getAmount() / 100.00));
+        TextView amountTextView = (TextView) row.findViewById(R.id.amount);
+        amountTextView.setText(numberFormat.format(entry.getAmount() / 100.0));
+        
         // description
         TextView description = (TextView) row.findViewById(R.id.description);
         description.setText(entry.getDescription());
+        
         // date
         TextView entryDate = (TextView) row.findViewById(R.id.entryDate);
         entryDate.setText(DateFormatter.formatToYesterdayOrToday(entry.getEntryDate()));

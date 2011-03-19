@@ -35,7 +35,7 @@ public class OikosParser {
         }
 
         if (amount != null) {
-            int a = Math.round(amount.floatValue() * -100);
+            int a = Math.round(amount.floatValue() * 100) * -1;
             manager.addEntry(a, description.toString());
             // clear text field
             return true;
