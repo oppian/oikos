@@ -21,7 +21,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager.SqliteOpenHelperFactory;
 import com.oppian.oikos.adaptors.EntryAdapter;
 
-public class Oikos extends OrmLiteBaseListActivity<Db> {
+public class OikosMainActivity extends OrmLiteBaseListActivity<Db> {
 
     private class OikosParseTask extends AsyncTask<String, Void, Boolean> {
 

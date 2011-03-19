@@ -11,6 +11,9 @@
 		<name>Oppian Systems Ltd</name>
 		<url>http://oppian.com</url>
 	</organization>
+	<properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    </properties>
 	<build>
 		<plugins>
 			<plugin>
