@@ -1,7 +1,7 @@
 package com.oppian.oikos;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
@@ -28,8 +28,6 @@ public class OikosManager {
 
     private Dao<Entry, Integer>   entryDao;
     private List<Entry>           entryList;
-
-    private List<IModelObservers> observers = new ArrayList<IModelObservers>();
 
     public OikosManager(Db db) throws SQLException {
         // setup daos
@@ -60,24 +58,6 @@ public class OikosManager {
         entryList.add(0, entry);
         // recalc the average
         average = calculateAverage();
-
-        notifyObservers();
-    }
-
-    /**
-     * Adds a model observer to this manager.
-     * 
-     * @param observer The observer to add.
-     */
-    public void addObserver(IModelObservers observer) {
-        observers.add(observer);
-    }
-
-    /**
-     * Removes all model observers
-     */
-    public void clearObservers() {
-        observers.clear();
     }
 
     public Account getAccount() {
@@ -89,11 +69,7 @@ public class OikosManager {
     }
 
     public List<Entry> getEntryList() {
-        return entryList;
-    }
-
-    public void removeObserver(IModelObservers observer) {
-        observers.remove(observer);
+        return Collections.unmodifiableList(entryList);
     }
 
     private int calculateAverage() {
@@ -126,11 +102,5 @@ public class OikosManager {
             return account;
         }
         return list.get(0);
-    }
-
-    private void notifyObservers() {
-        for (IModelObservers observer : observers) {
-            observer.onModelChanged();
-        }
     }
 }

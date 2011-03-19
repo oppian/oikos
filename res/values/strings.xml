@@ -6,4 +6,5 @@
 	<string name="today">Today</string>
 	<string name="yesterday">Yesterday</string>
 	<string name="currency">K</string>
+	<string name="error_sql">Problem with database</string>
 </resources>
