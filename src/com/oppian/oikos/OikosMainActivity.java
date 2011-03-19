@@ -9,15 +9,18 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.text.InputType;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ContextMenu.ContextMenuInfo;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView.OnEditorActionListener;
 
@@ -27,6 +30,7 @@ import com.j256.ormlite.android.apptools.OrmLiteSqliteOpenHelper;
 import com.j256.ormlite.android.apptools.OpenHelperManager.SqliteOpenHelperFactory;
 import com.oppian.oikos.adaptors.EntryAdapter;
 import com.oppian.oikos.tasks.AddCashTask;
+import com.oppian.oikos.tasks.DeleteEntryTask;
 import com.oppian.oikos.tasks.ITaskView;
 import com.oppian.oikos.tasks.ParseEntryTask;
 
@@ -85,6 +89,7 @@ public class OikosMainActivity extends OrmLiteBaseListActivity<Db> implements IT
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             }
         });
+        registerForContextMenu(lv);
 
         // setup addEntry textview
         addEntryTextView = (TextView) findViewById(R.id.addEntry);
@@ -184,5 +189,24 @@ public class OikosMainActivity extends OrmLiteBaseListActivity<Db> implements IT
 
     public synchronized OikosManager getManager() {
         return manager;
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        getMenuInflater().inflate(R.menu.entry_menu, menu);
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
+        switch (item.getItemId()) {
+            case R.id.delete_entry:
+                // delete entry
+                new DeleteEntryTask(this, R.string.entry_removed, R.string.error_entry_removed)
+                    .execute(info.position);
+                return true;
+        }
+        return super.onContextItemSelected(item);
     }
 }

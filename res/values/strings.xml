@@ -13,4 +13,7 @@
 	<string name="entry_added">Entry added</string>
 	<string name="cash_added">Cash added</string>
 	<string name="error_cash_added">Error adding cash</string>
+	<string name="delete_entry">Delete</string>
+	<string name="entry_removed">Entry removed</string>
+	<string name="error_entry_removed">Error removing entry</string>
 </resources>

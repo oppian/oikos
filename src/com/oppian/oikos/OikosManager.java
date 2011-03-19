@@ -24,7 +24,7 @@ public class OikosManager {
 
     private Dao<Account, Integer> accountDao;
 
-    private int                   average   = 0;
+    private int                   average = 0;
 
     private Dao<Entry, Integer>   entryDao;
     private List<Entry>           entryList;
@@ -46,23 +46,33 @@ public class OikosManager {
      * @param description The description for the entry
      * @throws SQLException If there was a SQL error
      */
-    public Entry addEntry(int amount, String description) throws SQLException {
+    public synchronized Entry addEntry(int amount, String description) throws SQLException {
         // create entry
         Entry entry = new Entry(account, amount, description);
         // save the entry into the db
         entryDao.create(entry);
         // update the account
-        synchronized (account) {
-            account.setTotal(account.getTotal() + entry.getAmount());
-            accountDao.update(account);
-        }
+        account.setTotal(account.getTotal() + entry.getAmount());
+        accountDao.update(account);
         // add the item to the list
-        synchronized (entryList) {
-            entryList.add(0, entry);
-        }
+        entryList.add(0, entry);
         // recalc the average
         average = calculateAverage();
-        
+
+        return entry;
+    }
+
+    public synchronized Entry removeEntry(int position) throws SQLException {
+        Entry entry = null;
+        // remove the item from the list
+        entry = entryList.remove(position);
+        entryDao.delete(entry);
+        // update the account
+        account.setTotal(account.getTotal() - entry.getAmount());
+        accountDao.update(account);
+        // recalc the average
+        average = calculateAverage();
+
         return entry;
     }
 

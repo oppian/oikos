@@ -14,9 +14,10 @@ public final class R {
         public static final int icon=0x7f020000;
     }
     public static final class id {
-        public static final int addCash=0x7f060008;
+        public static final int addCash=0x7f060009;
         public static final int addEntry=0x7f060007;
         public static final int amount=0x7f060000;
+        public static final int delete_entry=0x7f060008;
         public static final int description=0x7f060002;
         public static final int entryDate=0x7f060004;
         public static final int linearLayout1=0x7f060001;
@@ -29,7 +30,8 @@ public final class R {
         public static final int main=0x7f030001;
     }
     public static final class menu {
-        public static final int main_menu=0x7f050000;
+        public static final int entry_menu=0x7f050000;
+        public static final int main_menu=0x7f050001;
     }
     public static final class string {
         public static final int add_cash=0x7f040005;
@@ -38,8 +40,11 @@ public final class R {
         public static final int app_name=0x7f040000;
         public static final int cancel=0x7f040007;
         public static final int cash_added=0x7f04000b;
+        public static final int delete_entry=0x7f04000d;
         public static final int entry_added=0x7f04000a;
+        public static final int entry_removed=0x7f04000e;
         public static final int error_cash_added=0x7f04000c;
+        public static final int error_entry_removed=0x7f04000f;
         public static final int error_parse=0x7f040009;
         public static final int error_sql=0x7f040004;
         public static final int ok=0x7f040006;
