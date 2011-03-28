@@ -20,7 +20,7 @@ public class DateFormatter {
                 && calendar.get(Calendar.DAY_OF_YEAR) == yesterday.get(Calendar.DAY_OF_YEAR)) {
             return "Yesterday";
         } else {
-            return DateFormat.format("MMM d", yesterday).toString();
+            return DateFormat.format("MMM d", dateTime).toString();
         }
     }
 }

@@ -4,7 +4,7 @@
 	<uses-sdk android:minSdkVersion="3"></uses-sdk>
 
 
-	<application android:icon="@drawable/icon" android:label="@string/app_name" android:debuggable="true">
+	<application android:icon="@drawable/icon" android:label="@string/app_name">
 		<activity android:name="OikosMainActivity" android:label="@string/app_name">
 			<intent-filter>
 				<action android:name="android.intent.action.MAIN" />
